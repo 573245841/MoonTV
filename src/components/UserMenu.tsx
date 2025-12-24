@@ -53,6 +53,7 @@ export const UserMenu: React.FC = () => {
   const [isDoubanImageProxyDropdownOpen, setIsDoubanImageProxyDropdownOpen] = useState(false);
 
   const [autoDanmakuEnabled, setAutoDanmakuEnabled] = useState(false);
+  const [enablePreferBestSource, setEnablePreferBestSource] = useState(false);
   const [preferredDanmakuPlatform, setPreferredDanmakuPlatform] = useState("bilibili1");
   const [isDanmakuPlatformDropdownOpen, setIsDanmakuPlatformDropdownOpen] = useState(false);
 
@@ -212,6 +213,11 @@ export const UserMenu: React.FC = () => {
       const savedAutoDanmakuEnabled = localStorage.getItem('autoDanmakuEnabled');
       if (savedAutoDanmakuEnabled !== null) {
         setAutoDanmakuEnabled(JSON.parse(savedAutoDanmakuEnabled));
+      }
+
+      const savedEnablePreferBestSource = localStorage.getItem('enablePreferBestSource');
+      if (savedEnablePreferBestSource !== null) {
+        setEnablePreferBestSource(JSON.parse(savedEnablePreferBestSource));
       }
 
       const savedPreferredPlatform = localStorage.getItem("preferredDanmakuPlatform");
@@ -376,6 +382,11 @@ export const UserMenu: React.FC = () => {
     setAutoDanmakuEnabled(value);
     localStorage.setItem('autoDanmakuEnabled', JSON.stringify(value));
   };
+
+  const handlePreferBestSourceToggle = (value: boolean) => {
+    setEnablePreferBestSource(value);
+    localStorage.setItem('enablePreferBestSource', JSON.stringify(value));
+  };
   
   const handlePreferredPlatformChange = (value: string) => {
     setPreferredDanmakuPlatform(value);
@@ -476,6 +487,10 @@ export const UserMenu: React.FC = () => {
     setDoubanImageProxyType(defaultDoubanImageProxyType);
     setDoubanImageProxyUrl(defaultDoubanImageProxyUrl);
 
+    setEnablePreferBestSource(false);
+    setAutoDanmakuEnabled(false);
+    setPreferredDanmakuPlatform('bilibili1');
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('defaultAggregateSearch', JSON.stringify(true));
       localStorage.setItem('defaultStreamSearch', JSON.stringify(true));
@@ -486,6 +501,7 @@ export const UserMenu: React.FC = () => {
       localStorage.setItem('doubanImageProxyType', defaultDoubanImageProxyType);
       localStorage.setItem('doubanImageProxyUrl', defaultDoubanImageProxyUrl);
       
+      localStorage.setItem('enablePreferBestSource', JSON.stringify(false));
       localStorage.setItem('autoDanmakuEnabled', JSON.stringify(false));
       localStorage.setItem('preferredDanmakuPlatform', 'bilibili1');
     }
@@ -930,6 +946,30 @@ export const UserMenu: React.FC = () => {
                   className='sr-only peer'
                   checked={defaultStreamSearch}
                   onChange={(e) => handleDefaultStreamToggle(e.target.checked)}
+                />
+                <div className='w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-green-500 transition-colors dark:bg-gray-600'></div>
+                <div className='absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5'></div>
+              </div>
+            </label>
+          </div>
+
+          {/* 优选播放源 */}
+          <div className='flex items-center justify-between'>
+            <div>
+              <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                优选播放源
+              </h4>
+              <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                开启后，加载视频时执行优选，关闭则跳过
+              </p>
+            </div>
+            <label className='flex items-center cursor-pointer'>
+              <div className='relative'>
+                <input
+                  type='checkbox'
+                  className='sr-only peer'
+                  checked={enablePreferBestSource}
+                  onChange={(e) => handlePreferBestSourceToggle(e.target.checked)}
                 />
                 <div className='w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-green-500 transition-colors dark:bg-gray-600'></div>
                 <div className='absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5'></div>
